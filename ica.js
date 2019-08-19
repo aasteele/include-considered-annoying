@@ -61,52 +61,45 @@ var vmlc = d3.json("jsoninfo.json").then(function(d) {
         .attr("x", d => d.children ? -6 : 6)
         .attr("text-anchor", d => d.children ? "end" : "start")
         .text(d => d.data.name)
+        .attr("id", d => getNamePath(d))
         .attr("font-size", "x-small")
         .on("click",  handleMouseClickText)
         .on("mouseover", handleMouseOverText)
         .on("mouseout", handleMouseOutText)
         .clone(true).lower()
+        .attr("id", d => getNamePath(d) + "_clone")
         .attr("stroke", "white");
 
 
 });
 
+function getNamePath(node) {
+    return getNameStack(node).reverse().join(".");
+}
+
+function getNameStack(node) {
+    // Construct the stack with the hierarchy of the currently selected element
+    name_stack = [];
+    p = node;
+    while(p != null) {
+        name_stack.push(p.data.name);
+        p = p.parent;
+    }
+    return name_stack;
+}
+
 // Create Event Handlers for mouse
 function handleMouseOverText(d, i) {
-    if(clicked_element != null)
+    if(clicked_element != null) // Skip doing anything if we've clicked on something
         return;
-
     // When hovering over a text element, highlight that element and all parents, and dim everything else
-    c = d; // Child element
-    p = d.parent; // Parent element
     d3.selectAll("text").attr("fill", "grey");
-    d3.select(this).attr("fill", "orange");
-    if(p == null)
-        return;
-    // Else, we have a parent, so go about highlighting them
-    all_texts = d3.selectAll("text");
-    while(p != null) {
-        all_texts.filter(function() {
-            c_elem = d3.select(this);
 
-            if(c_elem.text() == p.data.name) {
-                elem_data = c_elem.data()[0];
-
-                if(elem_data.children == null)
-                    return false;
-
-                children = elem_data.children;
-
-                for(i = 0; i < children.length; i++) {
-                    if(children[i].data.name == c.data.name)
-                        return true;
-                }
-            }
-            return false;
-        })
-            .attr("fill", "orange");
-        c = p; // Continue down the tree
-        p = p.parent;
+    name_path = getNamePath(d);
+    name_split = name_path.split(".");
+    for(i = 0; i < name_split.length; i++) {
+        cur_elem = name_split.slice(0, i+1).join(".");
+        elem = d3.select("text[id='" + cur_elem + "']").attr("fill", "orange");
     }
 }
 
