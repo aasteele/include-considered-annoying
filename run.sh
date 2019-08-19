@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Handle ctrl-c for killing process
+trap "exit" INT TERM ERR
+trap "kill 0" EXIT
 
 if [ ! -z "$1" ]
 then
@@ -6,9 +9,11 @@ then
   dir=$(dirname $1)
   fname=$(basename $1 .yang)
 
-  yanger -p $dir -f jsoninfo -o $jsoninfo.json $1
+  yanger -p $dir -f jsoninfo -o jsoninfo.json $1
 fi
 
 python -m SimpleHTTPServer 8000 &
 
 open http://localhost:8000
+
+wait

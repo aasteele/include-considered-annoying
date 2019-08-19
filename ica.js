@@ -73,21 +73,7 @@ var vmlc = d3.json("jsoninfo.json").then(function(d) {
 
 });
 
-function getNamePath(node) {
-    return getNameStack(node).reverse().join(".");
-}
-
-function getNameStack(node) {
-    // Construct the stack with the hierarchy of the currently selected element
-    name_stack = [];
-    p = node;
-    while(p != null) {
-        name_stack.push(p.data.name);
-        p = p.parent;
-    }
-    return name_stack;
-}
-
+// ****** Handlers ******
 // Create Event Handlers for mouse
 function handleMouseOverText(d, i) {
     if(clicked_element != null) // Skip doing anything if we've clicked on something
@@ -119,6 +105,29 @@ function handleMouseClickText(d, i) {
     }
     else
         clicked_element = d3.select(this);
+}
+
+d3.select("input[id=recalculate]").on("click", function() {
+    tree.transition()
+        .size([d3.select("input[id=tree-size-width]") - 100, d3.select("input[id=tree-size-height]") - 160])
+        .duration(1000);
+})
+
+
+// ****** Generics ******
+function getNamePath(node) {
+    return getNameStack(node).reverse().join(".");
+}
+
+function getNameStack(node) {
+    // Construct the stack with the hierarchy of the currently selected element
+    name_stack = [];
+    p = node;
+    while(p != null) {
+        name_stack.push(p.data.name);
+        p = p.parent;
+    }
+    return name_stack;
 }
 
 function diagonal(d) {
