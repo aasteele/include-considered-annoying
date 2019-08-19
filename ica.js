@@ -1,4 +1,5 @@
 var vmlc_data = [];
+var clicked_element = null;
 
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
@@ -61,8 +62,9 @@ var vmlc = d3.json("jsoninfo.json").then(function(d) {
         .attr("text-anchor", d => d.children ? "end" : "start")
         .text(d => d.data.name)
         .attr("font-size", "x-small")
-        .on("mouseover", handleMouseOver)
-        .on("mouseout", handleMouseOut)
+        .on("click",  handleMouseClickText)
+        .on("mouseover", handleMouseOverText)
+        .on("mouseout", handleMouseOutText)
         .clone(true).lower()
         .attr("stroke", "white");
 
@@ -70,25 +72,60 @@ var vmlc = d3.json("jsoninfo.json").then(function(d) {
 });
 
 // Create Event Handlers for mouse
-function handleMouseOver(d, i) {
+function handleMouseOverText(d, i) {
+    if(clicked_element != null)
+        return;
+
     // When hovering over a text element, highlight that element and all parents, and dim everything else
-    console.log(d.parent);
-    p = d.parent;
+    c = d; // Child element
+    p = d.parent; // Parent element
     d3.selectAll("text").attr("fill", "grey");
     d3.select(this).attr("fill", "orange");
     if(p == null)
         return;
     // Else, we have a parent, so go about highlighting them
+    all_texts = d3.selectAll("text");
     while(p != null) {
-        d3.selectAll("text").filter(function() { return d3.select(this).text() == p.data["name"]})
+        all_texts.filter(function() {
+            c_elem = d3.select(this);
+
+            if(c_elem.text() == p.data.name) {
+                elem_data = c_elem.data()[0];
+
+                if(elem_data.children == null)
+                    return false;
+
+                children = elem_data.children;
+
+                for(i = 0; i < children.length; i++) {
+                    if(children[i].data.name == c.data.name)
+                        return true;
+                }
+            }
+            return false;
+        })
             .attr("fill", "orange");
+        c = p; // Continue down the tree
         p = p.parent;
     }
 }
 
-function handleMouseOut(d, i) {
+function handleMouseOutText(d, i) {
+    if(clicked_element != null)
+        return;
+
     // Reset all text colors to default
     d3.selectAll("text").attr("fill", "black");
+}
+
+function handleMouseClickText(d, i) {
+    // If we click on a text element, disable other hovering highlighting
+    if(clicked_element != null) {
+        clicked_element = null;
+        handleMouseOutText(d, i);
+    }
+    else
+        clicked_element = d3.select(this);
 }
 
 function diagonal(d) {
