@@ -55,7 +55,6 @@ var configs = d3.json("configurations.json").then(function(d) {
 
 d3.select("input[id=recalculate]").on("click", function() {
     updateSizes();
-
     // Do the actual reloading
     handleDataLoad(vmlc_d);
 })
@@ -86,7 +85,7 @@ function startLoadData() {
         d3.select("input[id=tree-sep-not-sibling]").attr("value", c["default-values"]["separation"][1]);
         d3.select("input[id=font-size]").attr("value", c["default-values"]["font-size"]);
         updateSizes();
-        
+
         vmlc = d3.json(c["file"]).then(function(d) {
             vmlc_d = d; // Save the data for recalling in the future if needed
             handleDataLoad(d);
