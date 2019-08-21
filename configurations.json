@@ -1,0 +1,9 @@
+{
+  "config-list":
+  [ {"name": "nfvo", "file": "data/nfvo.json",
+        "default-values": {"tree-size": [1500, 10000], "font-size": "x-small", "separation": [2, 1]}},
+
+    {"name": "esc-lite", "file": "data/esc-lite.json",
+        "default-values": {"tree-size": [1500, 7000], "font-size": "x-small", "separation": [0.5, 2]}}
+  ]
+}

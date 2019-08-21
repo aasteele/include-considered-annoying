@@ -4,55 +4,50 @@
     <head>
         <title>Include: Considered Annoying</title>
         <script src="https://d3js.org/d3.v5.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="collapsable/style.css">
 
-            <style>
-            .node circle {
-              fill: #999;
-            }
-
-            .node text {
-              font: 10px sans-serif;
-            }
-
-            .node--internal circle {
-              fill: #555;
-            }
-
-            .node--internal text {
-              text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
-            }
-
-            .link {
-              fill: none;
-              stroke: #555;
-              stroke-opacity: 0.4;
-              stroke-width: 1.5px;
-            }
-            </style>
     </head>
     <body>
         <h2>Include: Considered Annoying</h2>
+        <div id="intro">
+            <div style="margin-bottom:1%">
+                <h3>Default Configurations</h3>
+                <!--
+                <input type="radio" name="default_conf" id="dc_1" value="nfvo" />
+                <label for="dc_1">nfvo</label>
+                <br/>
+                <input type="radio" name="default_conf" id="dc_2" value="esc" />
+                <label for="dc_2">esc</label>
+                <br/>
+                -->
+                <div id="button-space"></div>
 
-        <div style="margin-bottom:1%">
-            <h3>Display Settings</h3>
-            <b><a href="https://www.w3schools.com/cssref/pr_font_font-size.asp">Font Size</a></b>
-            <input type="text" id="font-size" value="x-small" />
-            <br/>
+                <input type="button" id="load-configuration" value="Load Configuration"/>
+            </div>
 
-            <b>Tree Width/Height </b>
-            <input type="number" id="tree-size-width"/>
-            <input type="number" id="tree-size-height"/>
-            <br/>
+            <button class="collapsible">Display Settings</button>
+            <div class="content">
+                <b><a href="https://www.w3schools.com/cssref/pr_font_font-size.asp">Font Size</a></b>
+                <input type="text" id="font-size" value="x-small" />
+                <br/>
 
-            <b>Tree Separation (siblings, not siblings)</b>
-            <input type="number" id="tree-sep-sibling" value="0.5"/>
-            <input type="number" id="tree-sep-not-sibling" value="2"/>
-            <br/>
+                <b>Tree Width/Height </b>
+                <input type="number" id="tree-size-width"/>
+                <input type="number" id="tree-size-height"/>
+                <br/>
 
-            <input type="button" id="recalculate" value="Recalculate"/>
+                <b>Tree Separation (siblings, not siblings)</b>
+                <input type="number" id="tree-sep-sibling" value="0.5"/>
+                <input type="number" id="tree-sep-not-sibling" value="2"/>
+                <br/>
+
+                <input type="button" id="recalculate" value="Recalculate"/>
+            </div>
         </div>
         <svg width="1500"  height="7000"></svg>
     </body>
 
     <script type="text/javascript" src="ica.js"></script>
+    <script type="text/javascript" src="collapsable/collapsable.js"></script>
 </html>
