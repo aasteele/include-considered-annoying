@@ -1,6 +1,3 @@
-var vmlc_data = [];
-var clicked_element = null;
-
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height"),
@@ -10,9 +7,25 @@ var tree = d3.tree()
     .size([height - 100, width - 160])
     .separation((a, b) => { return a.parent == b.parent ? 0.5 : 2; });
 
-var radial = false;
+var vmlc_data = [];
+var clicked_element = null;
+var link = null;
+var node = [];
 
+var vmlc_d = null;
 var vmlc = d3.json("jsoninfo.json").then(function(d) {
+    vmlc_d = d; // Save the data for recalling in the future if needed
+    handleDataLoad(d);
+});
+
+// ****** Handlers ******
+// When the data is loaded from the file, or everything needs to be redrawn for some reason
+function handleDataLoad(d) {
+    vmlc_data = [];
+    clicked_element = null;
+    link = null;
+    node = [];
+
     // Format the data into a hierarchical structure
     tagpaths = d["tagpaths"]
 
@@ -23,9 +36,6 @@ var vmlc = d3.json("jsoninfo.json").then(function(d) {
 
         handle_path_arr(paths);
     }
-
-    // Filter the loaded data if desired
-    //vmlc_data = vmlc_data[1];
 
     if(vmlc_data instanceof Array) {
         // Add an actual root to the vmlc_data
@@ -69,11 +79,8 @@ var vmlc = d3.json("jsoninfo.json").then(function(d) {
         .clone(true).lower()
         .attr("id", d => getNamePath(d) + "_clone")
         .attr("stroke", "white");
+}
 
-
-});
-
-// ****** Handlers ******
 // Create Event Handlers for mouse
 function handleMouseOverText(d, i) {
     if(clicked_element != null) // Skip doing anything if we've clicked on something
@@ -92,7 +99,6 @@ function handleMouseOverText(d, i) {
 function handleMouseOutText(d, i) {
     if(clicked_element != null)
         return;
-
     // Reset all text colors to default
     d3.selectAll("text").attr("fill", "black");
 }
@@ -107,12 +113,27 @@ function handleMouseClickText(d, i) {
         clicked_element = d3.select(this);
 }
 
-d3.select("input[id=recalculate]").on("click", function() {
-    tree.transition()
-        .size([d3.select("input[id=tree-size-width]") - 100, d3.select("input[id=tree-size-height]") - 160])
-        .duration(1000);
-})
 
+d3.select("input[id=recalculate]").on("click", function() {
+    d3.selectAll("g > *").remove(); // Delete all the data elements, but keep g, which is the canvas element
+    // Save these for length
+    tree_height = parseInt(d3.select("input[id=tree-size-height]").property("value"));
+    tree_width = parseInt(d3.select("input[id=tree-size-width]").property("value"));
+    tree_sibling = parseFloat(d3.select("input[id=tree-sep-sibling").property("value"));
+    tree_not_sibling = parseFloat(d3.select("input[id=tree-sep-not-sibling").property("value"));
+
+    // Update with the new sizes
+    tree.size([tree_height - 100, tree_width - 160])
+        .separation((a, b) => { return a.parent == b.parent ? tree_sibling : tree_not_sibling; });
+
+    d3.select("svg").style("width", tree_width + "px");
+    d3.select("svg").style("height", tree_height + "px");
+
+    handleDataLoad(vmlc_d);
+        //.duration(1000);
+})
+d3.select("input[id=tree-size-width]").attr("value", width);
+d3.select("input[id=tree-size-height]").attr("value", height);
 
 // ****** Generics ******
 function getNamePath(node) {
