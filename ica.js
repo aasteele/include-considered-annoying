@@ -1,3 +1,4 @@
+// D3 elements
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height"),
@@ -7,12 +8,18 @@ var tree = d3.tree()
     .size([height - 100, width - 160])
     .separation((a, b) => { return a.parent == b.parent ? 0.5 : 2; });
 
+// Colors
+var color_click_scale = d3.scaleOrdinal(d3.schemeCategory10);
+var color_default = "black";
+var color_hover = "#00C803";
+
+// Default values
 var vmlc_data = [];
-var clicked_element = null;
+var clicked_element = [];
 var link = null;
 var node = [];
-
 var vmlc_d = null;
+
 var vmlc = d3.json("jsoninfo.json").then(function(d) {
     vmlc_d = d; // Save the data for recalling in the future if needed
     handleDataLoad(d);
@@ -22,7 +29,7 @@ var vmlc = d3.json("jsoninfo.json").then(function(d) {
 // When the data is loaded from the file, or everything needs to be redrawn for some reason
 function handleDataLoad(d) {
     vmlc_data = [];
-    clicked_element = null;
+    clicked_element = [];
     link = null;
     node = [];
 
@@ -72,7 +79,7 @@ function handleDataLoad(d) {
         .attr("text-anchor", d => d.children ? "end" : "start")
         .text(d => d.data.name)
         .attr("id", d => getNamePath(d))
-        .attr("font-size", "x-small")
+        .attr("font-size", d3.select("input[id=font-size]").property("value"))
         .on("click",  handleMouseClickText)
         .on("mouseover", handleMouseOverText)
         .on("mouseout", handleMouseOutText)
@@ -83,34 +90,30 @@ function handleDataLoad(d) {
 
 // Create Event Handlers for mouse
 function handleMouseOverText(d, i) {
-    if(clicked_element != null) // Skip doing anything if we've clicked on something
-        return;
-    // When hovering over a text element, highlight that element and all parents, and dim everything else
-    d3.selectAll("text").attr("fill", "grey");
 
-    name_path = getNamePath(d);
-    name_split = name_path.split(".");
-    for(i = 0; i < name_split.length; i++) {
-        cur_elem = name_split.slice(0, i+1).join(".");
-        elem = d3.select("text[id='" + cur_elem + "']").attr("fill", "orange");
-    }
+    // When hovering over a text element, highlight that element and all parents, and dim everything else
+    //d3.selectAll("text").attr("fill", "grey");
+
+    setPathData(d, color_hover);
 }
 
 function handleMouseOutText(d, i) {
-    if(clicked_element != null)
-        return;
-    // Reset all text colors to default
-    d3.selectAll("text").attr("fill", "black");
+
+    setPathData(d, color_default);
+
+    if(clicked_element != null) { // Something is clicked
+        // Check if that is what we're leaving now
+        for(var i = 0; i < clicked_element.length; i++) {
+            setStrPathData(clicked_element[i], color_click_scale(i));
+        }
+    }
 }
 
 function handleMouseClickText(d, i) {
-    // If we click on a text element, disable other hovering highlighting
-    if(clicked_element != null) {
-        clicked_element = null;
-        handleMouseOutText(d, i);
-    }
-    else
-        clicked_element = d3.select(this);
+    // If we click on an element, set the path to a different color
+    setPathData(d, color_click_scale(clicked_element.length));
+    // Then save what we clicked
+    clicked_element.push(d3.select(this).attr("id"));
 }
 
 
@@ -129,13 +132,32 @@ d3.select("input[id=recalculate]").on("click", function() {
     d3.select("svg").style("width", tree_width + "px");
     d3.select("svg").style("height", tree_height + "px");
 
+    // Do the actual reloading
     handleDataLoad(vmlc_d);
-        //.duration(1000);
 })
 d3.select("input[id=tree-size-width]").attr("value", width);
 d3.select("input[id=tree-size-height]").attr("value", height);
 
 // ****** Generics ******
+function setStrPathData(node_id, data) {
+    // Passing in an ID directly as a string
+    name_split = node_id.split(".");
+    for(i = 0; i < name_split.length; i++) {
+        cur_elem = name_split.slice(0, i+1).join(".");
+        elem = d3.select("text[id='" + cur_elem + "']").attr("fill", data);
+    }
+}
+function setPathData(node, data) {
+    // Applies changes to a child and all of it's parents in linear time
+    // TODO: Add other options than just fill color
+
+    name_path = getNamePath(node);
+    name_split = name_path.split(".");
+    for(i = 0; i < name_split.length; i++) {
+        cur_elem = name_split.slice(0, i+1).join(".");
+        elem = d3.select("text[id='" + cur_elem + "']").attr("fill", data);
+    }
+}
 function getNamePath(node) {
     return getNameStack(node).reverse().join(".");
 }

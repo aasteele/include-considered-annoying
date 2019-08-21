@@ -33,17 +33,22 @@
     <body>
         <h2>Include: Considered Annoying</h2>
 
-        <div>
+        <div style="margin-bottom:1%">
             <h3>Display Settings</h3>
+            <b><a href="https://www.w3schools.com/cssref/pr_font_font-size.asp">Font Size</a></b>
+            <input type="text" id="font-size" value="x-small" />
+            <br/>
 
             <b>Tree Width/Height </b>
             <input type="number" id="tree-size-width"/>
             <input type="number" id="tree-size-height"/>
             <br/>
+
             <b>Tree Separation (siblings, not siblings)</b>
             <input type="number" id="tree-sep-sibling" value="0.5"/>
             <input type="number" id="tree-sep-not-sibling" value="2"/>
             <br/>
+
             <input type="button" id="recalculate" value="Recalculate"/>
         </div>
         <svg width="1500"  height="7000"></svg>
