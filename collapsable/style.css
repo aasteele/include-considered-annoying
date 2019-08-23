@@ -5,7 +5,7 @@
     background-color: #eee;
     color: #444;
     cursor: pointer;
-    padding: 18px;
+    padding: 1%;
     width: 100%;
     border: none;
     text-align: left;
@@ -26,7 +26,7 @@
     transition: max-height 0.2s ease-out;
 
     border-radius: 0px 0px 15px 15px;
-    padding: 0 18px;
+    padding: 0 1%;
     background-color: #ddd;
     margin-bottom: 1%;
 }
@@ -36,7 +36,7 @@
     font-size: 13px;
     color: white;
     float: right;
-    margin-left: 5px;
+    margin-left: 0.2%;
 }
 
 .active:after {

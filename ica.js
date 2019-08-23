@@ -10,6 +10,7 @@ var tree = d3.tree()
 
 // Colors
 var color_click_scale = d3.scaleOrdinal(d3.schemeCategory10);
+var color_depth_scale = d3.scaleOrdinal(d3.schemeCategory10);
 var color_default = "black";
 var color_hover = "#00C803";
 
@@ -18,6 +19,7 @@ var vmlc_data = [];
 var clicked_element = [];
 var link = null;
 var node = [];
+var colorize_text_depth = null;
 
 var vmlc_d = null;
 var vmlc = null;
@@ -77,6 +79,12 @@ function startLoadData() {
     else {
         // Get checked radio button value
         var selected_id = d3.select('input[name="default_conf"]:checked').node().value;
+        colorize_text_depth = d3.select('input[id="colorize-text-depth"]:checked').node()
+        colorize_text_depth = (colorize_text_depth != null ? colorize_text_depth.value : null);
+
+        colorize_path_depth = d3.select('input[id="colorize-path-depth"]:checked').node()
+        colorize_path_depth = (colorize_path_depth != null ? colorize_path_depth.value : null);
+
         var c = configs[selected_id];
 
         d3.select("input[id=tree-size-width]").attr("value", c["default-values"]["tree-size"][0]);
@@ -145,13 +153,13 @@ function handleDataLoad(d) {
 
     var link = g.append("g")
         .attr("fill", "none")
-        .attr("stroke", "#555")
         .attr("stroke-opacity", 0.5)
         .attr("stroke-width", 1.0)
         .selectAll("path")
         .data(vmlc_hierarchy.descendants().slice(1))
         .join("path")
-          .attr("d", diagonal);
+            .attr("stroke", d => (colorize_path_depth != null ? color_depth_scale(d.depth) : "#555"))
+            .attr("d", diagonal);
 
     var node = g.append("g")
         .attr("stroke-linejoin", "round")
@@ -172,6 +180,7 @@ function handleDataLoad(d) {
         .text(d => d.data.name)
         .attr("id", d => getNamePath(d))
         .attr("font-size", d3.select("input[id=font-size]").property("value"))
+        .attr("fill", d => (colorize_text_depth != null ? color_click_scale(d.depth) : "black"))
         .on("click",  handleMouseClickText)
         .on("mouseover", handleMouseOverText)
         .on("mouseout", handleMouseOutText)
@@ -186,23 +195,26 @@ function handleMouseOverText(d, i) {
     // This isn't a bad idea, but it's very slow when  there are a lot of elements
     //d3.selectAll("text").attr("fill", "grey");
 
-    setIDPathData(d3.select(this).attr("id"), color_hover);
+    setIDPathData(d3.select(this).attr("id"), {"option": "fill", "color": color_hover});
 }
 
 function handleMouseOutText(d, i) {
-    setIDPathData(d3.select(this).attr("id"), color_default);
+    setIDPathData(d3.select(this).attr("id"), {"option": "fill", "color": color_default});
 
     if(clicked_element != null) { // Something is clicked
         // Re-apply whatever colors are supposed to be applied on the clicked elements
         for(var i = 0; i < clicked_element.length; i++) {
-            setIDPathData(clicked_element[i], color_click_scale(i));
+            setIDPathData(clicked_element[i], {"option": "fill", "color": color_click_scale(i)});
         }
+    }
+    if(colorize_text_depth != null) { // Text is colorized, so we need to reset the colors to what they were
+        setIDPathData(d3.select(this).attr("id"), {"option": "depth"})
     }
 }
 
 function handleMouseClickText(d, i) {
     // If we click on an element, set the path to a different color
-    setIDPathData(d3.select(this).attr("id"), color_click_scale(clicked_element.length));
+    setIDPathData(d3.select(this).attr("id"), {"option": "fill", "color": color_click_scale(clicked_element.length)});
     // Save what we clicked
     clicked_element.push(d3.select(this).attr("id"));
 }
@@ -211,12 +223,15 @@ function handleMouseClickText(d, i) {
 function setIDPathData(node_id, data) {
     // Applies to changes to a child and all of it's parents quickly
     // Passing in an ID directly as a string
+    // data = {"option": "fill/depth", "color":"#FFF"}
 
-    // TODO: Add other options than just fill color
     name_split = node_id.split(".");
     for(i = 0; i < name_split.length; i++) {
         cur_elem = name_split.slice(0, i+1).join(".");
-        elem = d3.select("text[id='" + cur_elem + "']").attr("fill", data);
+        if(data["option"] === "fill")
+            elem = d3.select("text[id='" + cur_elem + "']").attr("fill", data["color"]);
+        else if(data["option"] === "depth")
+            elem = d3.select("text[id='" + cur_elem + "']").attr("fill", color_depth_scale(i));
     }
 }
 

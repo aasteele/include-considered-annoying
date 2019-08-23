@@ -32,6 +32,7 @@
 }
 
 .svg-container {
+    width: 100%;
     opacity: 0;
     padding-top: 1%;
     padding-bottom: 1%;
@@ -41,6 +42,8 @@
 
 .default-confs {
     margin-bottom: 1%;
+
+    padding-bottom: 0.5%;
     padding-left: 1%;
 
     background-color: #ccc;
@@ -49,9 +52,14 @@
 }
 
 .default-confs input[type=radio] {
-    margin-right: 10px;
+    margin-right: 0.7%;
 }
 
-.default-confs b {
+.default-confs .header {
     font-size: large;
+}
+
+#button-space {
+    margin-top: 0.5%;
+    margin-bottom: 0.2%;
 }
