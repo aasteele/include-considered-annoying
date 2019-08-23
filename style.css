@@ -25,3 +25,33 @@
     width: 80%;
     padding-left: 5%:
 }
+
+.coll-content {
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+
+.svg-container {
+    opacity: 0;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    border-radius: 25px;
+    border: 2px solid #aaa;
+}
+
+.default-confs {
+    margin-bottom: 1%;
+    padding-left: 1%;
+
+    background-color: #ccc;
+
+    border-radius: 15px;
+}
+
+.default-confs input[type=radio] {
+    margin-right: 10px;
+}
+
+.default-confs b {
+    font-size: large;
+}

@@ -11,41 +11,40 @@
     <body>
         <h2>Include: Considered Annoying</h2>
         <div id="intro">
-            <div style="margin-bottom:1%">
-                <h3>Default Configurations</h3>
-                <!--
-                <input type="radio" name="default_conf" id="dc_1" value="nfvo" />
-                <label for="dc_1">nfvo</label>
-                <br/>
-                <input type="radio" name="default_conf" id="dc_2" value="esc" />
-                <label for="dc_2">esc</label>
-                <br/>
-                -->
+            <div class="default-confs">
+                <b>Default Configurations</b>
                 <div id="button-space"></div>
-
                 <input type="button" id="load-configuration" value="Load Configuration"/>
             </div>
 
             <button class="collapsible">Display Settings</button>
             <div class="content">
-                <b><a href="https://www.w3schools.com/cssref/pr_font_font-size.asp">Font Size</a></b>
-                <input type="text" id="font-size" value="x-small" />
-                <br/>
+                <div class="coll-content">
+                    <table>
+                        <tr>
+                            <td><b><a href="https://www.w3schools.com/cssref/pr_font_font-size.asp">Font Size</a></b></td>
+                            <td><input type="text" id="font-size" value="x-small" /></td>
+                        </tr>
+                        <tr>
+                            <td><b>Tree Size (Width, Height)</b></td>
+                            <td><input type="number" id="tree-size-width"/></td>
+                            <td><input type="number" id="tree-size-height"/></td>
+                        </tr>
+                        <tr>
+                            <td><b>Tree Separation (siblings, !siblings)</b></td>
+                            <td><input type="number" id="tree-sep-sibling" value="0.5"/></td>
+                            <td><input type="number" id="tree-sep-not-sibling" value="2"/></td>
+                        </tr>
+                    </table>
 
-                <b>Tree Width/Height </b>
-                <input type="number" id="tree-size-width"/>
-                <input type="number" id="tree-size-height"/>
-                <br/>
-
-                <b>Tree Separation (siblings, not siblings)</b>
-                <input type="number" id="tree-sep-sibling" value="0.5"/>
-                <input type="number" id="tree-sep-not-sibling" value="2"/>
-                <br/>
-
-                <input type="button" id="recalculate" value="Recalculate"/>
+                    <input type="button" id="recalculate" value="Recalculate"/>
+                </div>
             </div>
         </div>
-        <svg width="1500"  height="7000"></svg>
+
+        <div class="svg-container">
+            <svg width="1500"  height="7000"></svg>
+        </div>
     </body>
 
     <script type="text/javascript" src="ica.js"></script>

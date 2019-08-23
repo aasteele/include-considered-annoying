@@ -122,6 +122,8 @@ function handleDataLoad(d) {
 
     d3.selectAll("g > *").remove(); // Delete all the data elements, but keep g, which is the canvas element
     d3.selectAll("button.collapsible").style("opacity", "1");
+    d3.selectAll("button.collapsible").style("visibility", "visible");
+    d3.selectAll("div.svg-container").style("opacity", "1");
 
     // Format the data into a hierarchical structure
     tagpaths = d["tagpaths"]
