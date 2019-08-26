@@ -21,14 +21,17 @@
   stroke-width: 1.5px;
 }
 
-#intro {
-    width: 80%;
-    padding-left: 5%:
-}
+.content-box {
+    box-sizing: border-box;
+    margin-bottom: 1%;
+    padding-bottom: 0.5%;
+    padding-left: 1%;
+    padding-top: 0.5%;
 
-.coll-content {
-    padding-top: 1%;
-    padding-bottom: 1%;
+    background-color: #ccc;
+    border-radius: 15px;
+
+    width: 80%;
 }
 
 .svg-container {
@@ -40,22 +43,11 @@
     border: 2px solid #aaa;
 }
 
-.default-confs {
-    margin-bottom: 1%;
-
-    padding-bottom: 0.5%;
-    padding-left: 1%;
-
-    background-color: #ccc;
-
-    border-radius: 15px;
-}
-
 .default-confs input[type=radio] {
     margin-right: 0.7%;
 }
 
-.default-confs .header {
+.header {
     font-size: large;
 }
 

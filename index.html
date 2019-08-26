@@ -10,7 +10,7 @@
     </head>
     <body>
         <h2>Include: Considered Annoying</h2>
-        <div id="intro">
+        <div class="content-box">
             <div class="default-confs">
                 <b class="header">Default Configurations</b>
                 <div id="button-space"></div>
@@ -22,29 +22,35 @@
                 <br/><br/>
                 <input type="button" id="load-configuration" value="Load Configuration"/>
             </div>
+        </div>
 
-            <button class="collapsible"><b>Display Settings</b></button>
-            <div class="content">
-                <div class="coll-content">
-                    <table>
-                        <tr>
-                            <td><b><a href="https://www.w3schools.com/cssref/pr_font_font-size.asp">Font Size</a></b></td>
-                            <td><input type="text" id="font-size" value="x-small" /></td>
-                        </tr>
-                        <tr>
-                            <td><b>Tree Size (Width, Height)</b></td>
-                            <td><input type="number" id="tree-size-width"/></td>
-                            <td><input type="number" id="tree-size-height"/></td>
-                        </tr>
-                        <tr>
-                            <td><b>Tree Separation (siblings, !siblings)</b></td>
-                            <td><input type="number" id="tree-sep-sibling" value="0.5"/></td>
-                            <td><input type="number" id="tree-sep-not-sibling" value="2"/></td>
-                        </tr>
-                    </table>
+        <div class="content-box">
+            <b>Filter: </b>
+            <input type="text" id="filter-text"/>
+            <input type="button" id="update-filter" value="Apply Filter"/>
+        </div>
 
-                    <input type="button" id="recalculate" value="Recalculate"/>
-                </div>
+        <button class="collapsible"><b>Display Settings</b></button>
+        <div class="content">
+            <div class="internal">
+                <table>
+                    <tr>
+                        <td><b><a href="https://www.w3schools.com/cssref/pr_font_font-size.asp">Font Size</a></b></td>
+                        <td><input type="text" id="font-size" value="x-small" /></td>
+                    </tr>
+                    <tr>
+                        <td><b>Tree Size (Width, Height)</b></td>
+                        <td><input type="number" id="tree-size-width"/></td>
+                        <td><input type="number" id="tree-size-height"/></td>
+                    </tr>
+                    <tr>
+                        <td><b>Tree Separation (siblings, !siblings)</b></td>
+                        <td><input type="number" id="tree-sep-sibling" value="0.5"/></td>
+                        <td><input type="number" id="tree-sep-not-sibling" value="2"/></td>
+                    </tr>
+                </table>
+
+                <input type="button" id="recalculate" value="Recalculate"/>
             </div>
         </div>
 

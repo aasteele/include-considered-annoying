@@ -6,13 +6,15 @@
     color: #444;
     cursor: pointer;
     padding: 1%;
-    width: 100%;
+    padding-left: 1%;
+    width: 80%;
     border: none;
     text-align: left;
     outline: none;
     font-size: 15px;
     border-radius: 15px 15px 0px 0px;
 }
+
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
 .active, .collapsible:hover {
@@ -29,6 +31,13 @@
     padding: 0 1%;
     background-color: #ddd;
     margin-bottom: 1%;
+    width: 80%;
+    box-sizing: border-box;
+}
+
+.content .internal {
+    padding-top: 1%;
+    padding-bottom: 1%;
 }
 
 .collapsible:after {
