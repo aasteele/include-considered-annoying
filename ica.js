@@ -28,6 +28,8 @@ var configs = null;
 // First thing: read the available configurations
 var configs = d3.json("configurations.json").then(function(d) {
     if(fileExists("jsoninfo.json")) {
+        console.log("Load jsoninfo.json");
+        configs = null;
         startLoadData();
     }
     else {
@@ -69,22 +71,22 @@ d3.select("input[id=load-configuration]").on("click", function() {
 });
 
 function startLoadData() {
+    // Get checked radio button value
+    colorize_text_depth = d3.select('input[id="colorize-text-depth"]:checked').node()
+    colorize_text_depth = (colorize_text_depth != null ? colorize_text_depth.value : null);
+
+    colorize_path_depth = d3.select('input[id="colorize-path-depth"]:checked').node()
+    colorize_path_depth = (colorize_path_depth != null ? colorize_path_depth.value : null);
+
     // Check if we have configs, or if we should only handle base jsoninfo.json
-    if(configs == null) {
+    if(configs === null) {
         vmlc = d3.json("jsoninfo.json").then(function(d) {
             vmlc_d = d; // Save the data for recalling in the future if needed
             handleDataLoad(d);
         });
     }
     else {
-        // Get checked radio button value
         var selected_id = d3.select('input[name="default_conf"]:checked').node().value;
-        colorize_text_depth = d3.select('input[id="colorize-text-depth"]:checked').node()
-        colorize_text_depth = (colorize_text_depth != null ? colorize_text_depth.value : null);
-
-        colorize_path_depth = d3.select('input[id="colorize-path-depth"]:checked').node()
-        colorize_path_depth = (colorize_path_depth != null ? colorize_path_depth.value : null);
-
         var c = configs[selected_id];
 
         d3.select("input[id=tree-size-width]").attr("value", c["default-values"]["tree-size"][0]);
