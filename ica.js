@@ -20,6 +20,7 @@ var clicked_element = [];
 var link = null;
 var node = [];
 var colorize_text_depth = null;
+var text_filter = "";
 
 var vmlc_d = null;
 var vmlc = null;
@@ -61,7 +62,13 @@ d3.select("input[id=recalculate]").on("click", function() {
     updateSizes();
     // Do the actual reloading
     handleDataLoad(vmlc_d);
-})
+});
+
+d3.select("input[id=apply-filter]").on("click", function() {
+    text_filter = d3.select("input[id=filter-text").node().value;
+    handleDataLoad(vmlc_d);
+});
+
 // Set default values for width and height
 d3.select("input[id=tree-size-width]").attr("value", width);
 d3.select("input[id=tree-size-height]").attr("value", height);
@@ -191,6 +198,9 @@ function handleDataLoad(d) {
         .attr("stroke", "white");
 }
 
+function textFilter(d)  {
+    console.log(d);
+}
 // Create Event Handlers for mouse
 function handleMouseOverText(d, i) {
     // When hovering over a text element, highlight that element and all parents, and dim everything else
