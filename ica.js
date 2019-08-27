@@ -189,7 +189,7 @@ function handleDataLoad(d) {
         .text(d => d.data.name)
         .attr("id", d => getNamePath(d))
         .attr("font-size", d3.select("input[id=font-size]").property("value"))
-        .attr("fill", d => (colorize_text_depth != null ? color_click_scale(d.depth) : "black"))
+        .attr("fill", d => (colorize_text_depth != null ? color_depth_scale(d.depth) : "black"))
         .on("click",  handleMouseClickText)
         .on("mouseover", handleMouseOverText)
         .on("mouseout", handleMouseOutText)
@@ -213,14 +213,14 @@ function handleMouseOverText(d, i) {
 function handleMouseOutText(d, i) {
     setIDPathData(d3.select(this).attr("id"), {"option": "fill", "color": color_default});
 
+    if(colorize_text_depth != null) { // Text is colorized, so we need to reset the colors to what they were
+        setIDPathData(d3.select(this).attr("id"), {"option": "depth"})
+    }
     if(clicked_element != null) { // Something is clicked
         // Re-apply whatever colors are supposed to be applied on the clicked elements
         for(var i = 0; i < clicked_element.length; i++) {
             setIDPathData(clicked_element[i], {"option": "fill", "color": color_click_scale(i)});
         }
-    }
-    if(colorize_text_depth != null) { // Text is colorized, so we need to reset the colors to what they were
-        setIDPathData(d3.select(this).attr("id"), {"option": "depth"})
     }
 }
 
