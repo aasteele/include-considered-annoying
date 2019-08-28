@@ -171,10 +171,13 @@ function showTooltip(d, html_elem) {
         .duration(200)
         .style("opacity", .9);
 
-    // HTML formatted content for the tooltip
     console.log(d);
+    // HTML formatted content for the tooltip
+    cur_path = "/" + html_elem.attr("id").replace(/\./g, "/");
     tooltip_content =  `Name: ${d.data.name}<br/>
-                        Full Path: ${html_elem.attr("id")}`;
+                        Full Path: ${cur_path} <br/>
+                        Type: ${d.data.type}
+                        `;
 
     tooltip.html(tooltip_content)
         .style("left", (d3.event.pageX) + "px")

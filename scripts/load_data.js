@@ -1,5 +1,6 @@
 /*
 */
+tagpaths = null;
 
 function startLoadData() {
     // Get checked radio button value
@@ -70,9 +71,11 @@ function handle_path_arr(paths)  {
         structure in the proper way.
     */
     current_list = vmlc_data
+    parsed_paths = [];
 
     paths.forEach(function(path) {
         found_path = false;
+        parsed_paths.push(path);
 
         current_list.forEach(function(elem) {
             // Check if path is an element in the current list
@@ -86,8 +89,12 @@ function handle_path_arr(paths)  {
 
         // If we did not find the path, we need to create it
         if(!found_path) {
+            // Get the full path for the current element so the type can be retrieved
+            cur_path = "/" + parsed_paths.join("/");
+            type_data = tagpaths[cur_path];
+
             // Add a new element into the current_list of children with the name and an empty list of children
-            current_list.push({"name": path, "children": []})
+            current_list.push({"name": path, "children": [], "type": type_data["type"]})
             current_list = current_list[current_list.length - 1]["children"];
         }
         // If we *did* find it, we're done with this path
