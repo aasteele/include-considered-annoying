@@ -57,7 +57,7 @@
 }
 
 div.tooltip {
-    # Width & height are handled by flex
+    /* Width & height are handled by flex */
     display: flex;
     position: absolute;
 
@@ -70,5 +70,5 @@ div.tooltip {
     border: 0px;
     border-radius: 8px;
 
-    pointer-events: none;
+    z-index: 1;
 }

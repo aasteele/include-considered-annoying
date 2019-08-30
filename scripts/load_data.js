@@ -91,6 +91,7 @@ function handle_path_arr(paths)  {
         if(!found_path) {
             // Get the full path for the current element so the type can be retrieved
             cur_path = "/" + parsed_paths.join("/");
+            // TODO: Make the type data prettier, especially when there is child data in 'types'
             type_data = tagpaths[cur_path];
 
             // Add a new element into the current_list of children with the name and an empty list of children

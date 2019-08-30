@@ -10,10 +10,7 @@ var tree = d3.tree()
     .size([height - 100, width - 160])
     .separation((a, b) => { return a.parent == b.parent ? 0.5 : 2; });
 
-// Define the div for the tooltip
-var tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+var tooltip = null;
 
 // Colors
 var color_click_scale = d3.scaleOrdinal(d3.schemeCategory10);
@@ -122,13 +119,12 @@ function handleDataLoad(d) {
 
 function populateElements(d, vmlc_hierarchy) {
     // Create the SVG elements here
-
     var link = g.append("g")
         .attr("fill", "none")
         .attr("stroke-opacity", 0.5)
         .attr("stroke-width", 1.0)
         .selectAll("path")
-        .data(vmlc_hierarchy.descendants().slice(1))
+        .data(vmlc_hierarchy.descendants().slice(1)) // Ignore the first element, root
         .join("path")
             .attr("stroke", d => (colorize_path_depth != null ? color_depth_scale(d.depth) : "#555"))
             .attr("d", diagonal);
@@ -166,36 +162,62 @@ function textFilter(d)  {
 }
 
 // Tooltip functions
-function showTooltip(d, html_elem) {
-    tooltip.transition()
-        .duration(200)
-        .style("opacity", .9);
+function showTooltip() {
+    tooltip.transition("show-tooltip")
+            .duration(200)
+            .style("opacity", .9);
+}
+function populateTooltip(d,  html_elem) {
+    // Just doing opacity doesn't work for this tooltip, we need to remove it and re-create it every time it shows up
+    tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .attr("id", "tooltip")
+        .style("opacity", 0)
+        .on('mouseover', handleMouseOverTooltip)
+        .on('mouseout', handleMouseOutTooltip);
 
-    console.log(d);
-    // HTML formatted content for the tooltip
+    showTooltip();
+
+    // Replace the periods with slashes, as that's how people are used to seeing the paths
     cur_path = "/" + html_elem.attr("id").replace(/\./g, "/");
+    // HTML formatted content for the tooltip
     tooltip_content =  `Name: ${d.data.name}<br/>
                         Full Path: ${cur_path} <br/>
                         Type: ${d.data.type}
                         `;
 
+    // getBBox() works for an untransformed space, but getBoundingClientRect() works for transformed spaces
+    text_rect = html_elem.node().getBoundingClientRect();
+
     tooltip.html(tooltip_content)
-        .style("left", (d3.event.pageX) + "px")
-        .style("top", (d3.event.pageY - 28) + "px");
+        .style("left", (text_rect.x + text_rect.width + 10) + "px")
+        .style("top", (text_rect.y - 28) + "px");
 }
 function hideTooltip() {
-    tooltip.transition()
+    tooltip.transition("hide-tooltip")
         .duration(500)
-        .style("opacity", 0);
+        .style("opacity", 0)
+        .remove();
 }
-
+function handleMouseOverTooltip(d, i) {
+    // We want to keep the tooltip visible when it is moused over while visible, so we can include links or such
+    // To do that, we will interrupt the transition
+    d3.select(this).interrupt("hide-tooltip");
+    showTooltip();
+}
+function handleMouseOutTooltip(d, i) {
+    // Hide the tooltip when the mouse goes out
+    hideTooltip();
+    // It gets re-shown when going back to the original text, which hopefully won't be a problem in the future since
+    // there is 2 identical divs for less than half a second.
+}
 // Event handlers
 function handleMouseOverText(d, i) {
     // When hovering over a text element, highlight that element and all parents, and dim everything else
     // This isn't a bad idea, but it's very slow when  there are a lot of elements
     //d3.selectAll("text").attr("fill", "grey");
     // Make the tooltip appear
-    showTooltip(d, d3.select(this));
+    populateTooltip(d, d3.select(this));
 
     // Set the path color to hover
     setIDPathData(d3.select(this).attr("id"), {"option": "fill", "color": color_hover});
