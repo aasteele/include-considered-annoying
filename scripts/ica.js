@@ -1,5 +1,10 @@
 /*
 */
+// Make sure the page scrolls to the top when refreshed
+window.onbeforeunload = function () {
+  window.scrollTo(0, 0);
+}
+
 // D3 elements
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
@@ -204,7 +209,7 @@ function populateTooltip(d,  html_elem) {
             }
         }
     }
-    
+
     // HTML formatted content for the tooltip
     tooltip_content =  `Name: ${d.data.name}<br/>
                         Full Path: ${cur_path} <br/>
