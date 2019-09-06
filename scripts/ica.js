@@ -180,10 +180,35 @@ function populateTooltip(d,  html_elem) {
 
     // Replace the periods with slashes, as that's how people are used to seeing the paths
     cur_path = "/" + id.replace(/\./g, "/");
+
+    // Slightly smarter type display
+    dType = d.data.type;
+    typeDisplay = dType;
+    typeData = vmlc_d["types"];
+
+    // Check if the type has an entry in "types" in jsoninfo
+    if(dType in typeData) {
+        // If it does, see if that entry is a filled object
+        if(!isEmpty(typeData[dType])) {
+            // Simplifying to make things slightly less verbose
+            typeData = typeData[dType];
+
+            // For now, simply stringify the data to make it mostly readable
+            if(typeData.hasOwnProperty("type")) {
+                typeDisplay = typeData.type + ": ";
+                delete typeData.type
+                typeDisplay += JSON.stringify(typeData);
+            }
+            else {
+                typeDisplay = JSON.stringify(typeData);
+            }
+        }
+    }
+    
     // HTML formatted content for the tooltip
     tooltip_content =  `Name: ${d.data.name}<br/>
                         Full Path: ${cur_path} <br/>
-                        Type: ${d.data.type}
+                        Type: ${typeDisplay}
                         `;
 
     // getBBox() works for an untransformed space, but getBoundingClientRect() works for transformed spaces

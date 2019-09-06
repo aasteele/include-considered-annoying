@@ -35,3 +35,13 @@ function diagonal(d) {
         + " " + (d.parent.y + 50) + "," + d.parent.x
         + " " + d.parent.y + "," + d.parent.x;
 }
+
+// Check if an object is empty
+// Taken from https://coderwall.com/p/_g3x9q/how-to-check-if-javascript-object-is-empty
+function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
