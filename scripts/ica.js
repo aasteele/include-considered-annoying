@@ -88,8 +88,8 @@ function updateSizes() {
     // Save these for length
     tree_height         = parseInt(d3.select("input[id=tree-size-height]").property("value"));
     tree_width          = parseInt(d3.select("input[id=tree-size-width]").property("value"));
-    tree_sibling        = parseFloat(d3.select("input[id=tree-sep-sibling").property("value"));
-    tree_not_sibling    = parseFloat(d3.select("input[id=tree-sep-not-sibling").property("value"));
+    tree_sibling        = parseFloat(d3.select("input[id=tree-sep-sibling]").property("value"));
+    tree_not_sibling    = parseFloat(d3.select("input[id=tree-sep-not-sibling]").property("value"));
 
     // Update with the new sizes
     tree
