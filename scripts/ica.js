@@ -10,8 +10,6 @@ var tree = d3.tree()
     .size([height - 100, width - 160])
     .separation((a, b) => { return a.parent == b.parent ? 0.5 : 2; });
 
-var tooltip = null;
-
 // Colors
 var color_click_scale = d3.scaleOrdinal(d3.schemeCategory10);
 var color_depth_scale = d3.scaleOrdinal(d3.schemeCategory10);
@@ -162,24 +160,26 @@ function textFilter(d)  {
 }
 
 // Tooltip functions
-function showTooltip() {
-    tooltip.transition("show-tooltip")
+function showTooltip(id) {
+    selectTooltipElem(id).transition("show-tooltip")
             .duration(200)
             .style("opacity", .9);
 }
 function populateTooltip(d,  html_elem) {
     // Just doing opacity doesn't work for this tooltip, we need to remove it and re-create it every time it shows up
-    tooltip = d3.select("body").append("div")
+    id = html_elem.attr("id")
+
+    var tooltip = d3.select("body").append("div")
         .attr("class", "tooltip")
-        .attr("id", "tooltip")
+        .attr("id", "tooltip[" + id + "]")
         .style("opacity", 0)
         .on('mouseover', handleMouseOverTooltip)
         .on('mouseout', handleMouseOutTooltip);
 
-    showTooltip();
+    showTooltip(id);
 
     // Replace the periods with slashes, as that's how people are used to seeing the paths
-    cur_path = "/" + html_elem.attr("id").replace(/\./g, "/");
+    cur_path = "/" + id.replace(/\./g, "/");
     // HTML formatted content for the tooltip
     tooltip_content =  `Name: ${d.data.name}<br/>
                         Full Path: ${cur_path} <br/>
@@ -191,30 +191,37 @@ function populateTooltip(d,  html_elem) {
 
     tooltip.html(tooltip_content)
         .style("left", (text_rect.x + text_rect.width + 10) + "px")
-        .style("top", (text_rect.y - 28) + "px");
+        .style("top", (d3.event.pageY - 28) + "px");
 }
-function hideTooltip() {
-    tooltip.transition("hide-tooltip")
+function hideTooltip(id) {
+    selectTooltipElem(id).transition("hide-tooltip")
         .duration(500)
         .style("opacity", 0)
         .remove();
+}
+function selectTooltipElem(id) {
+    // Add in the prefix if it isn't present
+    if(!id.includes("tooltip["))
+        id = "tooltip[" + id + "]";
+    return d3.select("div[id='" + id + "']");
 }
 function handleMouseOverTooltip(d, i) {
     // We want to keep the tooltip visible when it is moused over while visible, so we can include links or such
     // To do that, we will interrupt the transition
     d3.select(this).interrupt("hide-tooltip");
-    showTooltip();
+    showTooltip(d3.select(this).attr("id"));
 }
 function handleMouseOutTooltip(d, i) {
     // Hide the tooltip when the mouse goes out
-    hideTooltip();
+    hideTooltip(d3.select(this).attr("id"));
     // It gets re-shown when going back to the original text, which hopefully won't be a problem in the future since
     // there is 2 identical divs for less than half a second.
+    // Surprising nobody, it is a problem.
 }
 // Event handlers
 function handleMouseOverText(d, i) {
     // When hovering over a text element, highlight that element and all parents, and dim everything else
-    // This isn't a bad idea, but it's very slow when  there are a lot of elements
+    // This isn't a bad idea, but it's very slow when there are a lot of elements
     //d3.selectAll("text").attr("fill", "grey");
     // Make the tooltip appear
     populateTooltip(d, d3.select(this));
@@ -225,7 +232,7 @@ function handleMouseOverText(d, i) {
 
 function handleMouseOutText(d, i) {
     // Make the tooltip disappear
-    hideTooltip();
+    hideTooltip(d3.select(this).attr("id"));
 
     // Reset everything to default colors
     setIDPathData(d3.select(this).attr("id"), {"option": "fill", "color": color_default});
