@@ -200,9 +200,15 @@ function populateTooltip(d,  html_elem) {
 
             // For now, simply stringify the data to make it mostly readable
             if(typeData.hasOwnProperty("type")) {
-                typeDisplay = typeData.type + ": ";
-                delete typeData.type
-                typeDisplay += JSON.stringify(typeData);
+                typeDisplay = typeData["type"] + ": ";
+
+                // Assemble everything except the type
+                tmp = {}
+                for(var key in typeData)
+                    if(key !== "type")
+                        tmp[key] = typeData[key];
+
+                typeDisplay += JSON.stringify(tmp);
             }
             else {
                 typeDisplay = JSON.stringify(typeData);
