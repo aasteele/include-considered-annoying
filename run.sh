@@ -12,7 +12,7 @@ then
   yanger -p $dir -f jsoninfo -o jsoninfo.json $1
 fi
 
-python -m SimpleHTTPServer 8000 &
+python3 -m http.server 8000 &
 
 open http://localhost:8000
 
