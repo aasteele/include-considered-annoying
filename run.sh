@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # Handle ctrl-c for killing process
-trap "exit" INT TERM ERR
 trap "kill 0" EXIT
 
 if [ ! -z "$1" ]
@@ -14,6 +13,10 @@ fi
 
 python3 -m http.server 8000 &
 
-open http://localhost:8000
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  xdg-open http://localhost:8000
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  open http://localhost:8000
+fi
 
 wait
