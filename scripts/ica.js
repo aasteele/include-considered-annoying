@@ -219,7 +219,8 @@ function populateTooltip(d,  html_elem) {
     // HTML formatted content for the tooltip
     tooltip_content =  `Name: ${d.data.name}<br/>
                         Full Path: ${cur_path} <br/>
-                        Type: ${typeDisplay}
+                        Type: ${typeDisplay}<br/>
+                        <a href='#' onclick='setRoot("${id}")'>Set Root</a>
                         `;
 
     // getBBox() works for an untransformed space, but getBoundingClientRect() works for transformed spaces
@@ -233,13 +234,16 @@ function hideTooltip(id) {
     selectTooltipElem(id).transition("hide-tooltip")
         .duration(500)
         .style("opacity", 0)
-        .remove();
+        //.remove();
 }
 function selectTooltipElem(id) {
     // Add in the prefix if it isn't present
     if(!id.includes("tooltip["))
         id = "tooltip[" + id + "]";
     return d3.select("div[id='" + id + "']");
+}
+function setRoot(path) {
+    console.log(path);
 }
 function handleMouseOverTooltip(d, i) {
     // We want to keep the tooltip visible when it is moused over while visible, so we can include links or such
