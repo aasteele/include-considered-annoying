@@ -8,7 +8,7 @@ then
   dir=$(dirname $1)
   fname=$(basename $1 .yang)
 
-  yanger -p $dir -f jsoninfo -o jsoninfo.json $1
+  yanger -p $dir -f jsoninfo $1 > jsoninfo.json
 fi
 
 python3 -m http.server 8000 &
