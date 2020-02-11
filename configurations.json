@@ -2,8 +2,11 @@
   "config-list":
   [ {"name": "NFVO", "file": "data/nfvo.json",
         "default-values": {"tree-size": [1500, 10000], "font-size": "x-small", "separation": [2, 1]}},
-
     {"name": "ESC-lite", "file": "data/esc-lite.json",
-        "default-values": {"tree-size": [1500, 7000], "font-size": "x-small", "separation": [0.5, 2]}}
+        "default-values": {"tree-size": [1500, 7000], "font-size": "x-small", "separation": [0.5, 2]}},
+    {"name": "SAE", "file": "data/sae.json",
+      "default-values": {"tree-size": [1500, 7000], "font-size": "x-small", "separation": [0.5, 2]}},
+    {"name": "DC", "file": "data/dc.json",
+      "default-values": {"tree-size": [1500, 7000], "font-size": "x-small", "separation": [0.5, 2]}}
   ]
 }
